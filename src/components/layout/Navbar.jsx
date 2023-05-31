@@ -8,6 +8,7 @@ const Navbar = () => {
         <button className="connect">
           <Link to={"/connectwallet"}>Connect Wallet</Link>
         </button>
+
         <button className="to_discord">
           <a href="" target="_blank">
             Discord
@@ -24,6 +25,14 @@ const Navbar = () => {
           <a href="" target="_blank">
             White paper
           </a>
+        </button>
+
+        <button>
+          <Link to={"/dice"}>Dice</Link>
+        </button>
+
+        <button>
+          <Link to={"/RPS"}>RPS</Link>
         </button>
       </div>
     </nav>
