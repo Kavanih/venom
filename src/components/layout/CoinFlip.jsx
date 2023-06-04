@@ -1,77 +1,55 @@
-import { useState } from "react";
-import { TbCircleLetterV } from "react-icons/tb";
-import { FaSpider } from "react-icons/fa";
-import { GiMaskedSpider } from "react-icons/gi";
+import { useState, useContext } from "react";
+import Currency from "./Currency";
+import AlertContext from "../../Context/AlertContext/AlertContext";
+import Alert from "./Alert";
 
 const CoinFlip = () => {
-  const rates = {
-    venom: [5, 10, 15, 20, 25],
-    trithon: [50, 100, 150, 200, 250],
+  const [trans, setTrans] = useState(0);
+  const [side, setSide] = useState("");
+  const [resultSide, setRsultSide] = useState("");
+
+  const alertCon = useContext(AlertContext);
+  const { addAlert } = alertCon;
+
+  const setWinning = (rans) => {
+    const compChoise = rans % 2 === 0 ? "head" : "tail";
+
+    if (side === compChoise) {
+      setRsultSide("You won");
+    } else {
+      setRsultSide("You lost");
+    }
   };
 
-  const [currRate, setCurrRate] = useState("venom");
-  const [ratee, setRate] = useState(rates[currRate][0]);
+  const startPlaying = () => {
+    if (!side) {
+      addAlert("You haven't chosen your side");
+      return;
+    }
+    const randTrans = Math.floor(Math.random() * 10) + 4;
+    setTrans(randTrans);
+    setWinning(randTrans);
+  };
 
-  const [choice, setChoice] = useState("tail");
-
-  console.log(ratee);
   return (
-    <div className="biggie grid grid-cols-2 h-[80vh] bg-color2 w-full rounded-lg p-20">
+    <div className="biggie">
+      <Alert />
       {/* LEFT */}
-      <div className="left flex flex-col justify-center">
-        <div className="rates grid grid-cols-5 gap-2 w-full bg-color1 mx-auto mb-6 rounded-sm p-1">
-          {rates[currRate].map((rate, idx) => (
-            <div
-              className={`rate ${rate === ratee ? "selected" : ""}`}
-              onClick={() => setRate(rates[currRate][idx])}
-            >
-              {rate} {currRate === "venom" ? <TbCircleLetterV /> : "🕷"}
-            </div>
-          ))}
-        </div>
-        {/* NUMBER TYPE */}
-        <div className="num_type flex w-full mx-auto justify-between mb-20">
-          <div className="num flex gap-1 bg-color1 rounded-sm overflow-hidden p-1 w-2/5">
-            <div
-              className={`even ${choice === "head" ? "selected" : ""}`}
-              onClick={() => setChoice("head")}
-            >
-              head
-            </div>
-            <div
-              className={`even uppercase w-1/2 py-1 text-center rounded-sm cursor-pointer ${
-                choice === "tail" ? "selected" : ""
-              }`}
-              onClick={() => setChoice("tail")}
-            >
-              tail
-            </div>
-          </div>
-          {/* SELECT PART */}
-          <select
-            className="bg-color1 rounded-sm w-3/6 px-2"
-            onChange={(e) => setCurrRate(e.target.value)}
-          >
-            <option value="venom">Venom</option>
-            <option value="trithon">Trithon</option>
-          </select>
-        </div>
-        {/* RECENT */}
-        <div className="recent w-full mx-auto text-center rounded-lg overflow-hidden">
-          <div className="top p-2 bg-color3">Recent Type</div>
-          <div className="main_recent bg-color1 p-2">Loading.....</div>
-        </div>
-      </div>
+      <Currency cho1="head" cho2="tail" side={side} setSide={setSide} />
       {/* RIGHT */}
-      <div className="right flex flex-col justify-between">
-        <div className="coin_cont image">
-          <FaSpider className="text-[8rem] front_image" />
-          <GiMaskedSpider className="back_image transform" />
+      <div className="right ">
+        <div
+          className="coin_cont mb-6 lg:mb-0"
+          style={{ transform: `rotateY(${trans * 180}deg)` }}
+        >
+          <img src="/img/heads.png" alt="" className="front_image transform" />
+          <img src="/img/tails.png" alt="" className="back_image transform" />
         </div>
         <div className="text-center">
-          <button className="roll bg-color3 font-semibold py-2 px-8 rounded-md mx-auto">
+          <button className="play_btn" onClick={startPlaying}>
             Roll Dice
           </button>
+          <div>{resultSide}</div>
         </div>
       </div>
     </div>

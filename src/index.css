@@ -1,15 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
 body {
-  @apply bg-color1 text-color2;
-  margin: 0;
-  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif; */
+  @apply bg-color1 text-color2 m-0;
   font-family: "Lexend Deca", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -36,35 +31,69 @@ code {
   @apply uppercase w-1/2 py-1 text-center rounded-sm cursor-pointer;
 }
 
-.image {
-  animation-name: spin;
-  animation-duration: 800ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  box-shadow: 0 0 20px 5px #ffbc11;
-}
-
-@keyframes spin {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
-
 .coin_cont {
-  @apply w-72 bg-color1 h-72 mx-auto flex justify-center items-center rounded-full relative border-2;
+  @apply w-72 h-72 mx-auto flex justify-center items-center rounded-full relative;
   transform-style: preserve-3d;
+  transition: 1s;
 }
 
 .back_image {
-  @apply absolute top-1/2 left-1/2 text-[10rem];
+  @apply absolute top-1/2 left-1/2 w-72 h-72;
   transform: rotateY(180deg) translate(50%, -50%) perspective(100px);
-  /* perspective: 100px; */
   backface-visibility: hidden;
 }
 .front_image {
   @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem];
   backface-visibility: hidden;
+}
+
+.biggie {
+  @apply block lg:grid grid-cols-2 lg:h-[80vh] lg:bg-color2 w-full rounded-lg lg:p-20;
+}
+
+.play_btn {
+  @apply bg-color3 font-semibold py-2 px-8 rounded-md mx-auto;
+}
+
+select {
+  @apply bg-color1 rounded-sm w-4/5 sm:w-3/6 px-2 py-2 border border-color3 outline-none;
+}
+
+.rates {
+  @apply flex flex-wrap justify-center sm:grid grid-cols-5 gap-2 w-full bg-color1 mx-auto mb-6 rounded-sm p-1 border border-color3 lg:border-0;
+}
+.left {
+  @apply mb-8 lg:mb-0;
+}
+.main_recent {
+  @apply bg-color2 lg:bg-color1 p-2 text-color1 lg:text-white;
+}
+
+.choice {
+  @apply text-2xl sm:text-[5rem] lg:text-color1 text-color3;
+}
+.pic1 {
+  @apply max-w-xs w-2/5 flex justify-center px-6 h-40 items-center sm:h-72 border-2 rounded-xl border-color3 lg:border-color1;
+}
+.links {
+  @apply flex gap-3 bg-color1 flex-col absolute right-0 h-auto p-4 lg:static top-full lg:p-0  lg:flex-row lg:bg-transparent;
+}
+.nav_control {
+  @apply hidden lg:flex;
+}
+
+.alert {
+  @apply fixed top-6 right-6;
+}
+.ale {
+  @apply bg-color3 mb-2 p-2 rounded-md;
+}
+.num {
+  @apply flex gap-1 bg-color1 rounded-sm overflow-hidden p-1 w-4/5 border border-color3 lg:border-0 mb-6 sm:my-0 sm:w-2/5;
+}
+.user_choice {
+  @apply w-full text-[10px] sm:text-[1rem] grid grid-cols-3 gap-1 bg-color1 rounded-lg overflow-hidden p-1 sm:w-4/5 mx-auto border border-color3 lg:border-0;
+}
+.right {
+  @apply flex flex-col justify-between mb-8 relative;
 }
