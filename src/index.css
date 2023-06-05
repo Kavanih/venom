@@ -8,6 +8,7 @@ body {
   font-family: "Lexend Deca", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("./BG/Hexagon.svg");
 }
 
 code {
