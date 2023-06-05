@@ -9,6 +9,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: url("./BG/Hexagon.svg");
+  background-size: cover;
 }
 
 code {
