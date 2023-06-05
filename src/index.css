@@ -72,13 +72,13 @@ select {
 }
 
 .choice {
-  @apply text-2xl sm:text-[5rem] lg:text-color1 text-color3;
+  @apply text-3xl sm:text-[5rem] lg:text-color1 text-color3;
 }
 .pic1 {
-  @apply max-w-xs w-2/5 flex justify-center px-6 h-40 items-center sm:h-60 border-2 rounded-xl border-color3 lg:border-color1;
+  @apply max-w-xs w-2/5 flex justify-center px-6 h-40 items-center sm:h-60 border-2 rounded-xl border-color3 bg-color4 lg:bg-transparent;
 }
 .links {
-  @apply flex gap-3 bg-color1 flex-col absolute right-0 h-auto p-4 lg:static top-full lg:p-0  lg:flex-row lg:bg-transparent;
+  @apply flex gap-3 bg-color1 flex-col absolute right-0 h-auto p-4 lg:static top-full lg:p-0  lg:flex-row lg:bg-transparent z-10;
 }
 .nav_control {
   @apply hidden lg:flex;
