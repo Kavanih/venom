@@ -49,7 +49,11 @@ const CoinFlip = () => {
           <button className="play_btn" onClick={startPlaying}>
             Roll Dice
           </button>
-          <div>{resultSide}</div>
+          <div className="status">{resultSide}</div>
+        </div>
+        <div className="recent block lg:hidden mt-6">
+          <div className="top p-2 bg-color3">Recent Type</div>
+          <div className="main_recent">Loading.....</div>
         </div>
       </div>
     </div>

@@ -35,7 +35,7 @@ const Dice = () => {
       <Currency cho1="even" cho2="odd" side={numType} setSide={setNumType} />
       {/* RIGHT */}
       <div className="right flex flex-col justify-between">
-        <div className="w-64 bg-color1 h-64 mx-auto flex justify-center items-center mb-4">
+        <div className="w-64 h-64 mx-auto flex justify-center items-center mb-4">
           {diceNumber ? (
             <img
               src={`/img/DICES/dice ${diceNumber}.svg`}
@@ -51,6 +51,10 @@ const Dice = () => {
             Roll Dice
           </button>
           <div className="status">{status}</div>
+        </div>
+        <div className="recent block lg:hidden mt-6">
+          <div className="top p-2 bg-color3">Recent Type</div>
+          <div className="main_recent">Loading.....</div>
         </div>
       </div>
     </div>

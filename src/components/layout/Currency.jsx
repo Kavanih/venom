@@ -48,7 +48,7 @@ const Currency = ({ cho1, cho2, side, setSide }) => {
         </select>
       </div>
       {/* RECENT */}
-      <div className="recent w-full mx-auto text-center rounded-lg overflow-hidden">
+      <div className="recent hidden lg:block">
         <div className="top p-2 bg-color3">Recent Type</div>
         <div className="main_recent">Loading.....</div>
       </div>
