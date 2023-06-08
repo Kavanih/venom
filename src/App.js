@@ -6,23 +6,26 @@ import Dice from "./components/layout/Dice";
 import RPS from "./components/layout/RPS";
 import CoinFlip from "./components/layout/CoinFlip";
 import AlertState from "./Context/AlertContext/AlertState";
+import { DataContextProvider } from "./Context/DataContext/DataContext";
 
 function App() {
   return (
     <AlertState>
-      <Router>
-        <div className="App w-[90%] sm:w-4/5 mx-auto">
-          <Navbar />
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/connectwallet" element={<ConnectWallet />} />
-            <Route exact path="/dice" element={<Dice />} />
-            <Route exact path="/RPS" element={<RPS />} />
-            <Route exact path="/connectwallet" element={<ConnectWallet />} />
-            <Route exact path="/coinflip" element={<CoinFlip />} />
-          </Routes>
-        </div>
-      </Router>
+      <DataContextProvider>
+        <Router>
+          <div className="App w-[90%] sm:w-4/5 mx-auto">
+            <Navbar />
+            <Routes>
+              <Route exact path="/" element={<Home />} />
+              <Route exact path="/connectwallet" element={<ConnectWallet />} />
+              <Route exact path="/dice" element={<Dice />} />
+              <Route exact path="/RPS" element={<RPS />} />
+              <Route exact path="/connectwallet" element={<ConnectWallet />} />
+              <Route exact path="/coinflip" element={<CoinFlip />} />
+            </Routes>
+          </div>
+        </Router>
+      </DataContextProvider>
     </AlertState>
   );
 }

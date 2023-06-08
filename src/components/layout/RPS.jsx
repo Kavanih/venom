@@ -3,11 +3,14 @@ import { FaHandRock, FaHandPaper, FaHandScissors } from "react-icons/fa";
 import Currency from "./Currency";
 import Alert from "./Alert";
 import AlertContext from "../../Context/AlertContext/AlertContext";
+import Loader from "./Loader";
+import Loaders from "./Loader1";
 
 const RPS = () => {
   const [myChoice, setMyChoice] = useState(null);
   const [ourChoice, setOurChoice] = useState(null);
   const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const alertCon = useContext(AlertContext);
   const { addAlert } = alertCon;
@@ -56,7 +59,12 @@ const RPS = () => {
       addAlert("You haven't selected your choice");
       return;
     }
-    generateComp();
+    setLoading(true);
+    setStatus("");
+    setTimeout(() => {
+      generateComp();
+      setLoading(false);
+    }, 5000);
   };
 
   return (
@@ -86,13 +94,21 @@ const RPS = () => {
             {myChoice ? choo(myChoice) : <div className="choice">🕷</div>}
           </div>
           <div className="pic1">
-            {ourChoice ? choo(ourChoice) : <div className="choice">🕷</div>}
+            {ourChoice && !loading ? (
+              choo(ourChoice)
+            ) : (
+              <div className="choice">{loading ? <Loaders /> : "🕷"}</div>
+            )}
           </div>
         </div>
         <div className="text-center">
-          <button className="play_btn" onClick={startPlaying}>
-            Play
-          </button>
+          {loading ? (
+            <Loader />
+          ) : (
+            <button className="play_btn" onClick={startPlaying}>
+              Play
+            </button>
+          )}
           <div className="status">{status}</div>
         </div>
         <div className="recent block lg:hidden mt-6">
