@@ -45,7 +45,7 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
 
         <select className="" onChange={(e) => setCurrRate(e.target.value)}>
           <option value="venom">
-            $Viper &nbsp; &nbsp; &nbsp; &nbsp; 🕷 {bal / 10 ** 18}
+            $Viper &nbsp; &nbsp; &nbsp; &nbsp; 🕷 {parseInt(bal / 10 ** 18)}
           </option>
           <option value="trithon">Trithon</option>
         </select>
