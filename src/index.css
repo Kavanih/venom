@@ -10,6 +10,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-image: url("./BG/Hexagon.svg");
   background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 code {
@@ -85,7 +87,7 @@ select {
 }
 
 .alert {
-  @apply fixed top-6 right-6;
+  @apply fixed top-6 right-6 z-20;
 }
 .ale {
   @apply bg-color3 mb-2 p-2 rounded-md;
@@ -105,4 +107,93 @@ select {
 }
 .status {
   @apply text-color3;
+}
+.ti {
+  @apply font-bold text-xl;
+}
+
+/* LOADER */
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 5px solid #fff;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  animation: pulse 1s linear infinite;
+}
+.loader:after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 5px solid #fff;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: scaleUp 1s linear infinite;
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+  }
+  60%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes pulse {
+  0%,
+  60%,
+  100% {
+    transform: scale(1);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+}
+
+.loaders {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #552d68;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* FLIPPING ANIMATION */
+.flipper {
+  animation: flip 0.3s infinite linear;
+}
+
+@keyframes flip {
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.roller {
+  animation: roll 0.3s infinite linear;
+}
+@keyframes roll {
+  100% {
+    transform: rotateZ(360deg);
+  }
 }
