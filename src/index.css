@@ -8,6 +8,8 @@ body {
   font-family: "Lexend Deca", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("./BG/Hexagon.svg");
+  background-size: cover;
 }
 
 code {
@@ -52,7 +54,7 @@ code {
 }
 
 .play_btn {
-  @apply bg-color3 font-semibold py-2 px-8 rounded-md mx-auto;
+  @apply bg-color3 font-semibold py-2 px-8 rounded-md mx-auto mb-8;
 }
 
 select {
@@ -96,4 +98,11 @@ select {
 }
 .right {
   @apply flex flex-col justify-between mb-8 relative;
+}
+
+.recent {
+  @apply max-w-sm w-full mx-auto text-center rounded-lg overflow-hidden;
+}
+.status {
+  @apply text-color3;
 }

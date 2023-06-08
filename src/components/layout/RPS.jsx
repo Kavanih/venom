@@ -93,7 +93,11 @@ const RPS = () => {
           <button className="play_btn" onClick={startPlaying}>
             Play
           </button>
-          <div>{status}</div>
+          <div className="status">{status}</div>
+        </div>
+        <div className="recent block lg:hidden mt-6">
+          <div className="top p-2 bg-color3">Recent Type</div>
+          <div className="main_recent">Loading.....</div>
         </div>
       </div>
     </div>
