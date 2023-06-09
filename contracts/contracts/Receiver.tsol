@@ -1,0 +1,119 @@
+pragma ever-solidity >= 0.61.2;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "tip3/contracts/interfaces/IAcceptTokensTransferCallback.sol";
+import "tip3/contracts/interfaces/ITokenRoot.sol";
+import "tip3/contracts/interfaces/ITokenWallet.sol";
+
+
+
+contract Receiver is IAcceptTokensTransferCallback {
+    
+    uint static _nonce;
+    address tokenRootAddress;
+    address tokenWalletAddress;
+    address owner;
+    uint a;
+    uint b;
+    bool c;
+    TvmCell rec;
+    uint d;
+    struct Wager {
+        address wager; 
+        address tokenAddress; 
+        uint stake;
+         string prediction;
+    }
+    Wager wage;
+
+    constructor(address _tokenRootAddress) public {
+        tvm.accept();
+        owner = msg.sender;
+        tokenRootAddress = _tokenRootAddress;
+
+        ITokenRoot(_tokenRootAddress).deployWallet {
+            value: 0,
+            flag: 128,
+            callback: Receiver.onTokenWallet // this callback will be called by TokenRoot after deploying wallet for tokensale
+        } (
+            address(this),
+            1 ever
+        );
+
+    }
+
+
+    function onTokenWallet(address value) external {
+        require (
+            msg.sender.value != 0 &&
+            msg.sender == tokenRootAddress,
+            101
+        );
+        tvm.rawReserve(1 ever, 0);
+        tokenWalletAddress = value; // store deployed tip3 wallet address
+        owner.transfer({ value: 0, flag: 128, bounce: false }); // sending remaining gas after setups
+    }
+
+
+    function onAcceptTokensTransfer(
+        address tokenRoot,
+        uint128 amount,
+        address sender,
+        address senderWallet,
+        address remainingGasTo,
+        TvmCell payload
+    ) external override {
+        
+        tvm.rawReserve(1 ever, 0);
+        a = amount;
+        TvmSlice data = payload.toSlice();
+        (address _wager, address _tokenAddress, uint _stake, string _prediction) = data.decode(address, address, uint, string);
+        Wager _wage = Wager({
+            wager : _wager,
+            tokenAddress : _tokenAddress,
+            stake : _stake,
+            prediction : "set"
+        });
+        wage = _wage;    
+        rec = payload;
+        d = 200;
+        remainingGasTo.transfer({ value: 0, flag: 128, bounce: false });
+
+        // disables warnings
+        tokenRoot;
+        amount;
+        sender;
+        senderWallet;
+        payload;
+
+    }
+
+    function getRec2() external view returns(uint) {
+        return d;
+    }
+
+
+    function getRec() external view returns(Wager _wage) {
+        return wage;
+    }
+    function decode(TvmCell data) external  {
+        tvm.accept();
+        TvmSlice _data = data.toSlice();
+        (uint _a, uint _b) = _data.decode(uint, uint);
+        a = _a;
+        b = _b;
+        msg.sender.transfer({value: 0, flag: 128, bounce : false});
+    }
+
+    function returnValues() external view returns(uint, uint, bool) {
+        return (a, b, c);
+    }
+
+
+    function decodeOut(TvmCell data) external pure returns(uint, uint) {
+        TvmSlice _data = data.toSlice();
+        (uint _a, uint _b) = _data.decode(uint, uint);
+        return (_a, _b);
+    }
+}

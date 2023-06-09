@@ -1,0 +1,94 @@
+pragma ever-solidity >= 0.61.2;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+
+import "tip3/contracts/interfaces/IAcceptTokensTransferCallback.sol";
+import "tip3/contracts/interfaces/ITokenRoot.sol";
+import "tip3/contracts/interfaces/ITokenWallet.sol";
+
+
+
+
+interface IReceiver {
+    function decode(TvmCell data) external;
+}
+
+contract TVMtest  is IAcceptTokensTransferCallback {
+
+    uint static _nonce;
+
+    address tokenRootAddress;
+    address tokenWalletAddress;
+    address owner;
+    
+    address[] rootTokens;
+    mapping(address => address) tokenWallets;
+    uint a;
+
+    constructor(address[] _rootTokens) public {        
+        tvm.accept();
+        for(address rootToken : _rootTokens) {
+            rootTokens.push(rootToken);
+            ITokenRoot(rootToken).deployWallet {
+            value: 1 ever,
+            flag: 1,
+            callback: TVMtest.onTokenWallet // this callback will be called by TokenRoot after deploying wallet for tokensale
+        } (
+            address(this),
+            0.1 ever
+        );
+            
+        }
+        msg.sender.transfer({value:0, flag : 128, bounce:false});
+    }
+
+
+
+    function validRootAddress(address _root) internal view returns(bool){
+        for(address root: rootTokens) {
+            if(root == _root){
+                return true;
+            }
+        }
+    }
+
+    function onAcceptTokensTransfer(
+        address tokenRoot,
+        uint128 amount,
+        address sender,
+        address senderWallet,
+        address remainingGasTo,
+        TvmCell payload
+    ) external override {
+        remainingGasTo.transfer({ value: 0, flag: 128, bounce: false });   
+        // disables warning
+        tokenRoot;
+        amount;
+        sender;
+        senderWallet;
+        remainingGasTo;
+        payload;
+    }
+
+    function onTokenWallet(address value) external {
+        require (
+            msg.sender.value != 0,
+            101
+        );
+        bool valid = validRootAddress(msg.sender);
+        if (valid == true) {
+            tokenWallets[msg.sender] = value; // store deployed tip3 wallet address
+        }
+        
+        owner.transfer({ value: 0, flag: 128, bounce: false }); // sending remaining gas after setups
+    }
+
+
+    function retrieve(address _root) external view returns(address inside) {
+        return tokenWallets[_root];
+    }
+    
+
+}
+
