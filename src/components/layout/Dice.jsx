@@ -9,6 +9,7 @@ import tokenWalletAbi from "../../contracts/abis/TokenWallet.abi.json";
 import DiceAbi from "../../contracts/abis/Dice.abi.json";
 import BigNumber from "bignumber.js";
 import { Address } from "everscale-inpage-provider";
+import Loader from "./Loader";
 
 const Dice = () => {
   const { VC, provider, isConnected, addr } = useContext(DataContext);
@@ -20,6 +21,7 @@ const Dice = () => {
   const [status, setStatus] = useState("");
   const [ratee, setRate] = useState(5);
   const [balance, setBalance] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const tokenRootAddress =
     "0:4b48307c6f59b4fcb2bf2fe4d6703a038825bc2b54ed0f43fedf5e68f299f301";
@@ -69,6 +71,8 @@ const Dice = () => {
       await contract.methods.getUserCurrentGame({ _owner: addr }).call()
     ).value0.blockTimestamp;
     console.log(currentGameTime);
+    setLoading(true);
+    console.log("loading");
     let res = await userTokenWallet.methods
       .transfer({
         amount: wage_amount,
@@ -107,6 +111,7 @@ const Dice = () => {
     } else {
       addAlert("Game not placed");
     }
+    setLoading(false);
   };
 
   const getTokenWallet = async (provider, owner) => {
@@ -188,9 +193,14 @@ const Dice = () => {
           )}
         </div>
         <div className="text-center">
-          <button className="play_btn" onClick={playGame}>
-            Roll Dice
-          </button>
+          {loading ? (
+            <Loader />
+          ) : (
+            <button className="play_btn" onClick={playGame}>
+              Roll Dice
+            </button>
+          )}
+
           <div className="status">{status}</div>
         </div>
         <div className="recent block lg:hidden mt-6">
