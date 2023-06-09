@@ -67,21 +67,27 @@ const Dice = () => {
 
     const userTokenWallet = await getTokenWallet(provider, addr);
 
+    setLoading(true);
     let currentGameTime = (
       await contract.methods.getUserCurrentGame({ _owner: addr }).call()
     ).value0.blockTimestamp;
     console.log(currentGameTime);
-    let res = await userTokenWallet.methods
-      .transfer({
-        amount: wage_amount,
-        recipient: diceAddress,
-        deployWalletValue: 2 * 10 ** 9,
-        notify: true,
-        payload: data.value0,
-        remainingGasTo: addr,
-      })
-      .send({ from: addr, amount });
-    console.log(res);
+    try {
+      let res = await userTokenWallet.methods
+        .transfer({
+          amount: wage_amount,
+          recipient: diceAddress,
+          deployWalletValue: 2 * 10 ** 9,
+          notify: true,
+          payload: data.value0,
+          remainingGasTo: addr,
+        })
+        .send({ from: addr, amount });
+      console.log(res);
+    } catch (e) {
+      setLoading(false);
+      return;
+    }
 
     let newGame = await contract.methods
       .getUserCurrentGame({ _owner: addr })
@@ -109,6 +115,7 @@ const Dice = () => {
     } else {
       addAlert("Game not placed");
     }
+    setLoading(false);
   };
 
   const getTokenWallet = async (provider, owner) => {
