@@ -4,9 +4,8 @@ import Alert from "./Alert";
 import AlertContext from "../../Context/AlertContext/AlertContext";
 import Loader from "./Loader";
 import { DataContext } from "../../Context/DataContext/DataContext";
+import { getBalance, tokenRootAddress, getTokenWallet } from "../../utils";
 
-import tokenRootAbi from "../../contracts/abis/TokenRoot.abi.json";
-import tokenWalletAbi from "../../contracts/abis/TokenWallet.abi.json";
 import DiceAbi from "../../contracts/abis/Dice.abi.json";
 import BigNumber from "bignumber.js";
 import { Address } from "everscale-inpage-provider";
@@ -23,16 +22,13 @@ const Dice = () => {
   const [ratee, setRate] = useState(5);
   const [balance, setBalance] = useState(0);
 
-  const tokenRootAddress =
-    "0:4b48307c6f59b4fcb2bf2fe4d6703a038825bc2b54ed0f43fedf5e68f299f301";
-
   const diceAddress = new Address(
     "0:db03d764adf8c2941680c300f4a29ff40b5953b4346c2e78db665b68b0214816"
   );
 
   useEffect(() => {
     if (addr) {
-      getBalance().then((bal) => {
+      getBalance(VC, provider, addr).then((bal) => {
         console.log(bal / 10 ** 18);
         console.log("Balance retrived");
         setBalance(bal);
@@ -116,80 +112,6 @@ const Dice = () => {
       addAlert("Game not placed");
     }
     setLoading(false);
-  };
-
-  const getTokenWallet = async (provider, owner) => {
-    const rootAdress = new Address(tokenRootAddress);
-    const rootContract = new provider.Contract(tokenRootAbi, rootAdress);
-    const tokenWallet = await rootContract.methods
-      .walletOf({
-        answerId: 0,
-        walletOwner: owner,
-      })
-      .call();
-    let tokenWalletAddress = tokenWallet.value0._address;
-    console.log(tokenWalletAddress);
-    tokenWalletAddress = new Address(tokenWalletAddress);
-    const tokenWalletContract = new provider.Contract(
-      tokenWalletAbi,
-      tokenWalletAddress
-    );
-    return tokenWalletContract;
-  };
-
-  const getBalance = async () => {
-    if (!VC) return;
-    const standalone = await VC?.getStandalone("venomwallet");
-    if (!standalone) {
-      addAlert("Standalone client not avaialbe");
-      return;
-    }
-    if (!provider) return;
-    const rootAdress = new Address(tokenRootAddress);
-    const rootContract = new standalone.Contract(tokenRootAbi, rootAdress);
-    const tokenWallet = await rootContract.methods
-      .walletOf({
-        answerId: 0,
-        walletOwner: addr,
-      })
-      .call();
-    let tokenWalletAddress = tokenWallet.value0._address;
-    console.log(tokenWalletAddress);
-    tokenWalletAddress = new Address(tokenWalletAddress);
-    const tokenWalletContract = new standalone.Contract(
-      tokenWalletAbi,
-      tokenWalletAddress
-    );
-    try {
-      const result = await tokenWalletContract.methods
-        .balance({ answerId: 0 })
-        .call();
-      return result.value0.toString();
-    } catch (e) {
-      return 0;
-    }
-  };
-
-  // YOU KNOW WHAT TO DO WITH THIS
-  const startGame = () => {
-    if (!numType) {
-      addAlert("You haven't chosen your number type");
-      return;
-    }
-    setLoading(true);
-
-    const rand = Math.floor(Math.random() * 6) + 1;
-
-    setTimeout(() => {
-      setDiceNumber(rand);
-      const numm = rand % 2 === 0 ? "even" : "odd";
-      if (numm === numType) {
-        setStatus("You won");
-      } else {
-        setStatus("You lost");
-      }
-      setLoading(false);
-    }, 5000);
   };
 
   return (
