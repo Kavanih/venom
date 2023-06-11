@@ -61,10 +61,12 @@ const RPS = () => {
     }
     setLoading(true);
     setStatus("");
-    setTimeout(() => {
+    let res = setTimeout(() => {
       generateComp();
       setLoading(false);
     }, 5000);
+    console.log("res");
+    console.log(res);
   };
 
   return (

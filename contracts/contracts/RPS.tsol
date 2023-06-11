@@ -1,0 +1,156 @@
+pragma ever-solidity >= 0.61.2;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+
+import "tip3/contracts/interfaces/IAcceptTokensTransferCallback.sol";
+import "tip3/contracts/interfaces/ITokenRoot.sol";
+import "tip3/contracts/interfaces/ITokenWallet.sol";
+
+
+
+contract RPS is IAcceptTokensTransferCallback  {
+    uint16 static _nonce;
+    uint ids = 1;
+    uint public state;
+    
+    address owner; 
+    
+    address rootToken;
+    address tokenWallet;
+    
+    struct RPSGame {
+        address     wager;
+        address     tokenAddress;
+        uint        stake;
+        uint        prediction;
+        uint64      blockTimestamp;
+        uint        result;
+    }
+
+    RPSGame[] public games;
+    mapping (address => RPSGame) public currentUserGame;
+    
+    
+    event BetPlaced(address wager, address tokenAddress, uint stake, uint prediction, uint result);
+    
+
+    constructor(address _tokenRoot, address _remainingTO) public  {
+        tvm.accept();
+        tvm.rawReserve(1 ever, 0); // we will always reserve 1 venom on this contract
+        owner = msg.sender;
+        rootToken = _tokenRoot;
+
+        ITokenRoot(_tokenRoot).deployWallet {
+            value: 1 ever,
+            flag: 1,
+            callback: RPS.onTokenWallet // this callback will be called by TokenRoot after deploying wallet for tokensale
+        } (
+            address(this),
+            0.1 ever
+        );
+        _remainingTO.transfer({ value: 0, flag: 128, bounce: false });
+    }
+
+
+   
+
+    function encode(address _wager, address _tokenAddress, uint128 _stake, uint _prediction) external pure returns(TvmCell){
+        TvmBuilder data;
+        data.store(_wager);
+        data.store(_tokenAddress);
+        data.store(_stake);
+        data.store(_prediction);
+        return data.toCell();
+    }
+
+     function playGame(uint _prediction, address _wager, uint128 _stake) internal returns(uint _res) {
+        rnd.shuffle(msg.pubkey());
+        uint rand = rnd.next() % 2;
+        uint res = rand + 1;
+        if (res == _prediction){
+            transferToken(_stake * 2, _wager);
+        } 
+        return res;  
+     }
+     
+     
+     function onAcceptTokensTransfer(
+        address tokenRoot,
+        uint128 amount,
+        address sender,
+        address senderWallet,
+        address remainingGasTo,
+        TvmCell payload
+    ) external override {
+        tvm.rawReserve(1 ever, 0);
+        state = amount;
+        TvmSlice data = payload.toSlice();
+        (address _wager, address _tokenAddress, uint128 _stake, uint _prediction) = data.decode(address, address, uint128, uint);
+        require(amount == _stake, 101);
+        uint res = playGame(_prediction, _wager, _stake);
+        RPSGame game = RPSGame({
+            wager: _wager,
+            tokenAddress : _tokenAddress,
+            stake : _stake, 
+            prediction : _prediction,
+            blockTimestamp : block.timestamp,
+            result : res
+    
+        });
+        games.push(game);
+        currentUserGame[_wager] = game;
+        emit BetPlaced(_wager, _tokenAddress, _stake, _prediction, res);
+        remainingGasTo.transfer({ value: 0, flag: 128, bounce: false });
+
+        // disables warnings
+        tokenRoot;
+        remainingGasTo;
+        amount;
+        sender;
+        senderWallet;
+        payload;
+
+    }
+
+
+    
+    function onTokenWallet(address value) external {
+        require (msg.sender.value != 0 && msg.sender == rootToken, 101);
+        tvm.rawReserve(1 ever, 0);
+        tokenWallet = value; // store deployed tip3 wallet address
+        
+        owner.transfer({ value: 0, flag: 128, bounce: false }); // sending remaining gas after setups
+    }
+
+    
+    function getTokenWallet() external view returns (address ) {
+        return tokenWallet;
+    }
+
+    function transferToken(uint128 amount, address _receiver) internal {
+        TvmCell empty;
+        // here we just operate with deployed in constructor wallet. owner should provide token supply on this wallet before sales!
+        ITokenWallet(tokenWallet).transfer{ value: 1 ever, flag: 1 }(
+            amount,
+            _receiver,
+            0.1 ever, // this parameter allows to deploy wallet for user, if it's not deployed yet. (fee takes from message so will be payed by user)
+            msg.sender,
+            false,
+            empty
+        );
+    }
+
+
+
+    function getUserCurrentGame(address _owner) external view returns(RPSGame) {
+        return currentUserGame[_owner];
+    }
+
+
+    function getGameByID(uint _id) external view returns(RPSGame  game) {
+        return games[_id];
+    }
+
+ 
+}
