@@ -10,6 +10,7 @@ const CoinFlip = () => {
   const [resultSide, setRsultSide] = useState("");
   const [loading, setLoading] = useState(false);
   const [ratee, setRate] = useState(5);
+  const [ourSide, setOurSide] = useState("head");
 
   const alertCon = useContext(AlertContext);
   const { addAlert } = alertCon;
@@ -53,7 +54,12 @@ const CoinFlip = () => {
       />
       {/* RIGHT */}
       <div className="right ">
-        <div className={`coin_cont mb-6 lg:mb-0 ${loading ? "flipper" : ""}`}>
+        <div
+          className={`coin_cont mb-6 lg:mb-0 ${loading ? "flipper" : ""}`}
+          style={{
+            transform: `rotate(${ourSide === "head" ? "0deg" : "180deg"})`,
+          }}
+        >
           <img src="/img/tails.png" alt="" className="back_image transform" />
           <img src="/img/heads.png" alt="" className="front_image transform" />
         </div>
