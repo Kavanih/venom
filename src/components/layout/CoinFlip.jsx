@@ -11,13 +11,13 @@ const CoinFlip = () => {
   const [loading, setLoading] = useState(false);
   const [ratee, setRate] = useState(5);
   const [ourSide, setOurSide] = useState("");
-
+  const [res, setResult] = useState("head");
   const alertCon = useContext(AlertContext);
   const { addAlert } = alertCon;
 
   const setWinning = (rans) => {
     const compChoise = rans % 2 === 0 ? "head" : "tail";
-
+    setResult(compChoise);
     if (side === compChoise) {
       setRsultSide("You won");
     } else {
@@ -57,7 +57,7 @@ const CoinFlip = () => {
         <div
           className={`coin_cont mb-6 lg:mb-0 ${loading ? "flipper" : ""}`}
           style={{
-            transform: `rotateY(${ourSide === "head" ? "0deg" : "180deg"})`,
+            transform: `rotateY(${res === "head" ? "0deg" : "180deg"})`,
           }}
         >
           <img src="/img/tails.png" alt="" className="back_image transform" />
