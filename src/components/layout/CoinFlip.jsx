@@ -1,19 +1,45 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Currency from "./Currency";
 import AlertContext from "../../Context/AlertContext/AlertContext";
 import Alert from "./Alert";
 import Loader from "./Loader";
+import { Address } from "everscale-inpage-provider";
+import { DataContext } from "../../Context/DataContext/DataContext";
+import { getBalance, tokenRootAddress, getTokenWallet } from "../../utils";
+import BigNumber from "bignumber.js";
+
+import CoinAbi from "../../contracts/abis/Coin.abi.json";
+
+const CoinAddress = new Address(
+  "0:c4f476eea445d2109b0ec84ad38baabaf5077aac32f1dacf0cb98850b208b9f9"
+);
+
+const dunno = {
+  head: 1,
+  tail: 2,
+};
 
 const CoinFlip = () => {
-  const [trans, setTrans] = useState(0);
+  const { VC, provider, isConnected, addr } = useContext(DataContext);
+  const [balance, setBalance] = useState(0);
   const [side, setSide] = useState("");
   const [resultSide, setRsultSide] = useState("");
   const [loading, setLoading] = useState(false);
   const [ratee, setRate] = useState(5);
-  const [ourSide, setOurSide] = useState("");
+
   const [res, setResult] = useState("head");
   const alertCon = useContext(AlertContext);
   const { addAlert } = alertCon;
+
+  useEffect(() => {
+    if (addr) {
+      getBalance(VC, provider, addr).then((bal) => {
+        console.log(bal / 10 ** 18);
+        console.log("Balance retrived");
+        setBalance(bal);
+      });
+    }
+  }, [addr]);
 
   const setWinning = (rans) => {
     const compChoise = rans % 2 === 0 ? "head" : "tail";
@@ -25,19 +51,64 @@ const CoinFlip = () => {
     }
   };
 
-  const startPlaying = () => {
+  const startPlaying = async () => {
+    if (!VC && !provider) return;
+    if (!isConnected) {
+      addAlert("You haven't connect your wallet");
+      return;
+    }
+
     if (!side) {
       addAlert("You haven't chosen your side");
       return;
     }
-
     setLoading(true);
-    const randTrans = Math.floor(Math.random() * 10) + 4;
-    setTimeout(() => {
-      setTrans(randTrans);
-      setWinning(randTrans);
+    let wage_amount = new BigNumber(ratee).multipliedBy(10 ** 18).toString();
+    let amount = new BigNumber(1)
+      .plus(new BigNumber(5).multipliedBy(10 ** 9))
+      .toString();
+    const contract = new provider.Contract(CoinAbi, CoinAddress);
+    const data = await contract.methods
+      .encode({
+        _wager: addr,
+        _tokenAddress: tokenRootAddress,
+        _stake: wage_amount,
+        _prediction: dunno[side],
+      })
+      .call();
+    const userTokenWallet = await getTokenWallet(provider, addr);
+    let currentGameTime = (
+      await contract.methods.getUserCurrentGame({ _owner: addr }).call()
+    ).value0.blockTimestamp;
+    console.log(currentGameTime);
+    try {
+      await userTokenWallet.methods
+        .transfer({
+          amount: wage_amount,
+          recipient: CoinAddress,
+          deployWalletValue: 2 * 10 ** 9,
+          notify: true,
+          payload: data.value0,
+          remainingGasTo: addr,
+        })
+        .send({ from: addr, amount });
+
+      let newGame = await contract.methods
+        .getUserCurrentGame({ _owner: addr })
+        .call();
+      if (newGame.value0.blockTimestamp !== currentGameTime) {
+        let gameData = newGame.value0;
+        let res = Object.keys(dunno).find(key => dunno[key] == gameData.result);
+        
+        console.log(res);
+      } else {
+        addAlert("Game not placed");
+      }
       setLoading(false);
-    }, 5000);
+    } catch (e) {
+      setLoading(false);
+      return;
+    }
   };
 
   return (
@@ -51,6 +122,7 @@ const CoinFlip = () => {
         setSide={setSide}
         ratee={ratee}
         setRate={setRate}
+        bal={balance}
       />
       {/* RIGHT */}
       <div className="right ">
