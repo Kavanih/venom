@@ -3,7 +3,7 @@ import { MdOutlineVerified } from "react-icons/md";
 
 const Home = () => {
   return (
-    <div className="w-full mx-auto bg-color2 text-color1 p-6 rounded-md grid grid-cols-2 gap-4">
+    <div className="w-full mx-auto bg-color2 text-color1 p-6 rounded-md lg:grid grid-cols-2 gap-4">
       <div className="text-2xl text-center col-span-2 mb-8 font-bold">
         Welcome to Viper Casino
       </div>
