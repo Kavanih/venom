@@ -109,7 +109,7 @@ select {
   @apply text-color3;
 }
 .ti {
-  @apply font-bold text-xl;
+  @apply font-bold text-xl flex items-center gap-4;
 }
 
 /* LOADER */
