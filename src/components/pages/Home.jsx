@@ -1,17 +1,17 @@
 const Home = () => {
   return (
-    <div className="w-full mx-auto bg-color2 text-color1 p-6 rounded-md grid grid-cols-2">
-      <div className="text-2xl text-center col-span-2 mb-8">
+    <div className="w-full mx-auto bg-color2 text-color1 p-6 rounded-md grid grid-cols-2 gap-4">
+      <div className="text-2xl text-center col-span-2 mb-8 semibold">
         Welcome to Viper Casino
       </div>
       <div className="">
         <div className="ti">Play & EARN FOR FREE</div>
         <div className="content mb-4">
           At Venom Viper Casino, you have the opportunity to play using $VViper,
-          a digital currency that can be claimed from the faucet on the website.
-          The faucet provides a way for players to receive free $VViper,
-          allowing them to enjoy the casino games and potentially win real
-          rewards without spending their own money.
+          the Viper Casino native token on Venom Blockchain that can be claimed
+          from the faucet on the website. The faucet provides a way for players
+          to receive free $VViper, allowing them to enjoy the casino games and
+          potentially win rewards without spending their own money.
         </div>
       </div>
       <div className="">

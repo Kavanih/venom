@@ -60,8 +60,8 @@ const CoinFlip = () => {
             transform: `rotateY(${res === "head" ? "0deg" : "180deg"})`,
           }}
         >
-          <img src="/img/tails.jpg" alt="" className="back_image transform" />
-          <img src="/img/heads.jpg" alt="" className="front_image transform" />
+          <img src="/img/tails.png" alt="" className="back_image transform" />
+          <img src="/img/heads.png" alt="" className="front_image transform" />
         </div>
         <div className="text-center">
           {loading ? (

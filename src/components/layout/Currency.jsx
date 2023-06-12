@@ -3,12 +3,10 @@ import { TbCircleLetterV } from "react-icons/tb";
 
 const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
   const rates = {
-    venom: [5, 10, 15, 20, 25],
-    trithon: [50, 100, 150, 200, 250],
+    viper: [5, 10, 15, 20, 25],
   };
 
-  const [currRate, setCurrRate] = useState("venom");
-  // const [ratee, setRate] = useState(rates[currRate][0]);
+  const [currRate, setCurrRate] = useState("viper");
 
   return (
     <div className="left flex flex-col justify-center">
@@ -19,7 +17,7 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
             onClick={() => setRate(rates[currRate][idx])}
             key={idx}
           >
-            {rate} {currRate === "venom" ? <TbCircleLetterV /> : "🕷"}
+            {rate} {currRate === "viper" ? <TbCircleLetterV /> : "🕷"}
           </div>
         ))}
       </div>
@@ -47,7 +45,6 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
           <option value="venom">
             $Viper &nbsp; &nbsp; &nbsp; &nbsp; 🕷 {parseInt(bal / 10 ** 18)}
           </option>
-          <option value="trithon">Trithon</option>
         </select>
       </div>
       {/* RECENT */}
