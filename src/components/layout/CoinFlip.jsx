@@ -41,16 +41,6 @@ const CoinFlip = () => {
     }
   }, [addr]);
 
-  const setWinning = (rans) => {
-    const compChoise = rans % 2 === 0 ? "head" : "tail";
-    setResult(compChoise);
-    if (side === compChoise) {
-      setRsultSide("You won");
-    } else {
-      setRsultSide("You lost");
-    }
-  };
-
   const startPlaying = async () => {
     if (!VC && !provider) return;
     if (!isConnected) {
@@ -98,8 +88,16 @@ const CoinFlip = () => {
         .call();
       if (newGame.value0.blockTimestamp !== currentGameTime) {
         let gameData = newGame.value0;
-        let res = Object.keys(dunno).find(key => dunno[key] == gameData.result);
-        
+        console.log(gameData);
+        let res = Object.keys(dunno).find(
+          (key) => dunno[key] == gameData.result
+        );
+        setResult(res);
+        if (res === side) {
+          addAlert("You Won");
+        } else {
+          addAlert("You Lost");
+        }
         console.log(res);
       } else {
         addAlert("Game not placed");
@@ -109,6 +107,8 @@ const CoinFlip = () => {
       setLoading(false);
       return;
     }
+    let newbal = await getBalance(VC, provider, addr);
+    setBalance(newbal);
   };
 
   return (
