@@ -41,11 +41,13 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
         )}
         {/* SELECT PART */}
 
-        <select className="" onChange={(e) => setCurrRate(e.target.value)}>
-          <option value="venom">
-            $Viper &nbsp; &nbsp; &nbsp; &nbsp; 🕷 {parseInt(bal / 10 ** 18)}
-          </option>
-        </select>
+        {/* <select className="" onChange={(e) => setCurrRate(e.target.value)}>
+          <option value="venom"> */}
+        <div className="bg-color1 rounded-sm w-4/5 sm:w-3/6 px-2 py-2 border border-color3 outline-none;">
+          $Viper &nbsp; &nbsp; &nbsp; &nbsp; 🕷 {parseInt(bal / 10 ** 18)}
+        </div>
+        {/* </option>
+        </select> */}
       </div>
       {/* RECENT */}
       <div className="recent hidden lg:block">
