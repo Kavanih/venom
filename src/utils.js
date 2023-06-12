@@ -55,3 +55,34 @@ export const getTokenWallet = async (provider, owner) => {
   );
   return tokenWalletContract;
 };
+
+export const getRecentGames = async (contract) => {
+  const games = await contract.methods.games().call();
+  return games.games.reverse().slice(0, 5);
+};
+
+export const parseResult = (gameType, recents) => {
+  if (gameType === "dice") {
+    let parseSed = recents.map((recent) => {
+      let gameRes = parseInt(recent.result);
+      let win =
+        (gameRes % 2 === 0 && recent.prediction === "even") ||
+        (gameRes % 2 !== 0 && recent.prediction === "odd");
+      return {
+        wager: recent.wager._address,
+        stake: parseInt(recent.stake) / 10 ** 18,
+        win: win,
+      };
+    });
+    return parseSed;
+  } else if (gameType === "coin") {
+    let parseSed = recents.map((recent) => {
+      return {
+        wager: recent.wager._address,
+        stake: parseInt(recent.stake) / 10 ** 18,
+        win: recent.result === recent.prediction,
+      };
+    });
+    return parseSed;
+  }
+};

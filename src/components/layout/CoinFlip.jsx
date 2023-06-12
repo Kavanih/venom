@@ -5,7 +5,13 @@ import Alert from "./Alert";
 import Loader from "./Loader";
 import { Address } from "everscale-inpage-provider";
 import { DataContext } from "../../Context/DataContext/DataContext";
-import { getBalance, tokenRootAddress, getTokenWallet } from "../../utils";
+import {
+  getBalance,
+  tokenRootAddress,
+  getTokenWallet,
+  getRecentGames,
+  parseResult,
+} from "../../utils";
 import BigNumber from "bignumber.js";
 
 import CoinAbi from "../../contracts/abis/Coin.abi.json";
@@ -23,11 +29,10 @@ const CoinFlip = () => {
   const { VC, provider, isConnected, addr } = useContext(DataContext);
   const [balance, setBalance] = useState(0);
   const [side, setSide] = useState("");
-  const [resultSide, setRsultSide] = useState("");
   const [loading, setLoading] = useState(false);
   const [ratee, setRate] = useState(5);
-
-  const [res, setResult] = useState("head");
+  const [res, setResult] = useState("");
+  const [recentGames, setRecentGames] = useState([]);
   const alertCon = useContext(AlertContext);
   const { addAlert } = alertCon;
 
@@ -40,6 +45,15 @@ const CoinFlip = () => {
       });
     }
   }, [addr]);
+
+  useEffect(() => {
+    if (!provider) return;
+    const contract = new provider.Contract(CoinAbi, CoinAddress);
+    getRecentGames(contract).then((res) => {
+      let parsed = parseResult("coin", res);
+      setRecentGames(parsed);
+    });
+  }, [provider, res]);
 
   const startPlaying = async () => {
     if (!VC && !provider) return;
@@ -123,6 +137,7 @@ const CoinFlip = () => {
         ratee={ratee}
         setRate={setRate}
         bal={balance}
+        recentGames={recentGames}
       />
       {/* RIGHT */}
       <div className="right ">
@@ -143,7 +158,7 @@ const CoinFlip = () => {
               Roll Dice
             </button>
           )}
-          <div className="status">{resultSide}</div>
+          <div className="status">{res}</div>
         </div>
         <div className="recent block lg:hidden mt-6">
           <div className="top p-2 bg-color3">Recent Type</div>

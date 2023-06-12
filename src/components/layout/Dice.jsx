@@ -4,8 +4,13 @@ import Alert from "./Alert";
 import AlertContext from "../../Context/AlertContext/AlertContext";
 import Loader from "./Loader";
 import { DataContext } from "../../Context/DataContext/DataContext";
-import { getBalance, tokenRootAddress, getTokenWallet } from "../../utils";
-
+import {
+  getBalance,
+  tokenRootAddress,
+  getTokenWallet,
+  parseResult,
+} from "../../utils";
+import { getRecentGames } from "../../utils";
 import DiceAbi from "../../contracts/abis/Dice.abi.json";
 import BigNumber from "bignumber.js";
 import { Address } from "everscale-inpage-provider";
@@ -20,6 +25,7 @@ const Dice = () => {
   const [numType, setNumType] = useState("");
   const [status, setStatus] = useState("");
   const [ratee, setRate] = useState(5);
+  const [recentGames, setRecentGames] = useState([]);
   const [balance, setBalance] = useState(0);
 
   const diceAddress = new Address(
@@ -35,6 +41,16 @@ const Dice = () => {
       });
     }
   }, [addr]);
+
+  useEffect(() => {
+    if (!provider) return;
+    const contract = new provider.Contract(DiceAbi, diceAddress);
+    getRecentGames(contract).then((res) => {
+      let parsed = parseResult("dice", res);
+      setRecentGames(parsed);
+      console.log(res);
+    });
+  }, [provider, diceNumber]);
 
   const playGame = async () => {
     if (!VC && !provider) return;
@@ -127,6 +143,7 @@ const Dice = () => {
         setRate={setRate}
         setSide={setNumType}
         bal={balance}
+        recentGames={recentGames}
       />
       {/* RIGHT */}
       <div className="right flex flex-col justify-between">

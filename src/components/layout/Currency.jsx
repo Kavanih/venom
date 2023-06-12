@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { TbCircleLetterV } from "react-icons/tb";
 
-const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
+const Currency = ({
+  cho1,
+  cho2,
+  side,
+  setSide,
+  ratee,
+  setRate,
+  bal,
+  recentGames,
+}) => {
   const rates = {
     viper: [5, 10, 15, 20, 25],
   };
@@ -64,18 +73,19 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
             <div>Wager</div>
             <div>Profit</div>
           </div>
-          {plays.map((play) => (
+          {recentGames.map((play) => (
             <div className="text-sm flex justify-between">
               <div className="player">
-                {play.player.slice(0, 4)}...{play.player.slice(-4, -1)}
+                {play.wager.slice(0, 4)}...
+                {play.wager.slice(-4, -1)}
               </div>
-              <div className="wager">🕷 {play.wager}</div>
+              <div className="wager">🕷 {play.stake}</div>
               <div
                 className={`profit ${
-                  play.profit < 1 ? "text-red-600" : "text-green-600"
+                  play.win ? "text-green-600" : "text-red-600"
                 }`}
               >
-                🕷 {play.profit}
+                🕷 {play.win ? 2 * play.stake : 0}
               </div>
             </div>
           ))}
