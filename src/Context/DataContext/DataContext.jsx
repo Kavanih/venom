@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { initVenomConnect } from "../../components/venom-connect/configure";
+import { getBalance } from "../../utils";
 // Create a new context
 const DataContext = createContext();
 
@@ -11,6 +12,7 @@ const DataContextProvider = ({ children }) => {
   const [pubkey, setPubkey] = useState();
   const [provider, setProvider] = useState();
   const [isConnected, setIsConnected] = useState();
+  const [balance, setBalance] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -29,6 +31,16 @@ const DataContextProvider = ({ children }) => {
       off?.();
     };
   }, [VC]);
+
+  useEffect(() => {
+    if (addr) {
+      getBalance(VC, provider, addr).then((bal) => {
+        console.log(bal / 10 ** 18);
+        console.log("Balance retrived");
+        setBalance(bal);
+      });
+    }
+  }, [addr]);
 
   const getAddress = async (provider) => {
     const providerState = await provider?.getProviderState?.();
@@ -68,6 +80,8 @@ const DataContextProvider = ({ children }) => {
     provider,
     isConnected,
     onDisconnect,
+    balance,
+    setBalance,
   };
 
   // Return the context provider with the provided value and children

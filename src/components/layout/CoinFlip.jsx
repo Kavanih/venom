@@ -26,8 +26,9 @@ const dunno = {
 };
 
 const CoinFlip = () => {
-  const { VC, provider, isConnected, addr } = useContext(DataContext);
-  const [balance, setBalance] = useState(0);
+  const { VC, provider, isConnected, addr, setBalance } =
+    useContext(DataContext);
+
   const [side, setSide] = useState("");
   const [loading, setLoading] = useState(false);
   const [ratee, setRate] = useState(5);
@@ -35,16 +36,6 @@ const CoinFlip = () => {
   const [recentGames, setRecentGames] = useState([]);
   const alertCon = useContext(AlertContext);
   const { addAlert } = alertCon;
-
-  useEffect(() => {
-    if (addr) {
-      getBalance(VC, provider, addr).then((bal) => {
-        console.log(bal / 10 ** 18);
-        console.log("Balance retrived");
-        setBalance(bal);
-      });
-    }
-  }, [addr]);
 
   useEffect(() => {
     if (!provider) return;
@@ -136,7 +127,6 @@ const CoinFlip = () => {
         setSide={setSide}
         ratee={ratee}
         setRate={setRate}
-        bal={balance}
         recentGames={recentGames}
       />
       {/* RIGHT */}

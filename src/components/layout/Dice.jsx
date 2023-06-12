@@ -16,7 +16,8 @@ import BigNumber from "bignumber.js";
 import { Address } from "everscale-inpage-provider";
 
 const Dice = () => {
-  const { VC, provider, isConnected, addr } = useContext(DataContext);
+  const { VC, provider, isConnected, addr, setBalance } =
+    useContext(DataContext);
   const [loading, setLoading] = useState(false);
   const alertCon = useContext(AlertContext);
   const { addAlert } = alertCon;
@@ -26,21 +27,10 @@ const Dice = () => {
   const [status, setStatus] = useState("");
   const [ratee, setRate] = useState(5);
   const [recentGames, setRecentGames] = useState([]);
-  const [balance, setBalance] = useState(0);
 
   const diceAddress = new Address(
     "0:db03d764adf8c2941680c300f4a29ff40b5953b4346c2e78db665b68b0214816"
   );
-
-  useEffect(() => {
-    if (addr) {
-      getBalance(VC, provider, addr).then((bal) => {
-        console.log(bal / 10 ** 18);
-        console.log("Balance retrived");
-        setBalance(bal);
-      });
-    }
-  }, [addr]);
 
   useEffect(() => {
     if (!provider) return;
@@ -142,7 +132,6 @@ const Dice = () => {
         ratee={ratee}
         setRate={setRate}
         setSide={setNumType}
-        bal={balance}
         recentGames={recentGames}
       />
       {/* RIGHT */}

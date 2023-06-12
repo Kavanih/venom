@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { TbCircleLetterV } from "react-icons/tb";
+import { DataContext } from "../../Context/DataContext/DataContext";
 
 const Currency = ({
   cho1,
@@ -8,7 +9,7 @@ const Currency = ({
   setSide,
   ratee,
   setRate,
-  bal,
+
   recentGames,
 }) => {
   const rates = {
@@ -16,12 +17,7 @@ const Currency = ({
   };
 
   const [currRate, setCurrRate] = useState("viper");
-
-  const plays = [
-    { player: "kfgertfgkuysgurjk/vizrbygsdfvh.hfuoj", wager: 5, profit: 15 },
-    { player: "kfgertfgkuysgurjk/vizrbygsdfvh.hfuoj", wager: 5, profit: 15 },
-    { player: "kfgertfgkuysgurjk/vizrbygsdfvh.hfuoj", wager: 5, profit: 15 },
-  ];
+  const { balance } = useContext(DataContext);
 
   return (
     <div className="left flex flex-col justify-center">
@@ -59,7 +55,7 @@ const Currency = ({
         {/* <select className="" onChange={(e) => setCurrRate(e.target.value)}>
           <option value="venom"> */}
         <div className="bg-color1 rounded-sm w-4/5 sm:w-3/6 px-2 py-2 border border-color3 outline-none;">
-          $Viper &nbsp; &nbsp; &nbsp; &nbsp; 🕷 {parseInt(bal / 10 ** 18)}
+          $Viper &nbsp; &nbsp; &nbsp; &nbsp; 🕷 {parseInt(balance / 10 ** 18)}
         </div>
         {/* </option>
         </select> */}
