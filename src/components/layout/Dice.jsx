@@ -47,6 +47,7 @@ const Dice = () => {
       addAlert("You haven't chosen your number type");
       return;
     }
+    setLoading(true);
     let wage_amount = new BigNumber(ratee).multipliedBy(10 ** 18).toString();
     const contract = new provider.Contract(DiceAbi, diceAddress);
     let amount = new BigNumber(1)
@@ -63,7 +64,7 @@ const Dice = () => {
 
     const userTokenWallet = await getTokenWallet(provider, addr);
 
-    setLoading(true);
+    // setLoading(true);
     let currentGameTime = (
       await contract.methods.getUserCurrentGame({ _owner: addr }).call()
     ).value0.blockTimestamp;

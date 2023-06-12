@@ -8,6 +8,12 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
 
   const [currRate, setCurrRate] = useState("viper");
 
+  const plays = [
+    { player: "kfgertfgkuysgurjk/vizrbygsdfvh.hfuoj", wager: 5, profit: 15 },
+    { player: "kfgertfgkuysgurjk/vizrbygsdfvh.hfuoj", wager: 5, profit: 15 },
+    { player: "kfgertfgkuysgurjk/vizrbygsdfvh.hfuoj", wager: 5, profit: 15 },
+  ];
+
   return (
     <div className="left flex flex-col justify-center">
       <div className="rates ">
@@ -51,8 +57,24 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
       </div>
       {/* RECENT */}
       <div className="recent hidden lg:block">
-        <div className="top p-2 bg-color3">Recent Type</div>
-        <div className="main_recent">Loading.....</div>
+        <div className="top p-2 bg-color3">Recent Plays</div>
+        <div className="main_recent">
+          {plays.map((play) => (
+            <div className="text-sm flex">
+              <div className="player">
+                {play.player.slice(0, 4)}...{play.player.slice(-4, -1)}
+              </div>
+              <div className="wager">🕷 {play.wager}</div>
+              <div
+                className={`profit ${
+                  play.profit < 1 ? "text-red-600" : "text-green-600"
+                }`}
+              >
+                🕷 {play.profit}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
