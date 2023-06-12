@@ -58,9 +58,9 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
       {/* RECENT */}
       <div className="recent hidden lg:block">
         <div className="top p-2 bg-color3">Recent Plays</div>
-        <div className="main_recent">
+        <div className="main_recent h-20 overflow-auto">
           {plays.map((play) => (
-            <div className="text-sm flex">
+            <div className="text-sm flex justify-between">
               <div className="player">
                 {play.player.slice(0, 4)}...{play.player.slice(-4, -1)}
               </div>
