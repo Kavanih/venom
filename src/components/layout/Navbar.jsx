@@ -24,6 +24,11 @@ const Navbar = () => {
           <Link to={"/coinflip"}>CoinFlip</Link>
         </button>
 
+        {/* CLAIM BUTTON */}
+        <button onClick={() => setShowMenu(false)}>
+          <Link to={"/"}>Claim 100 $Vviper</Link>
+        </button>
+
         <ConnectButton />
       </div>
       <div className="open lg:hidden inline-block">
