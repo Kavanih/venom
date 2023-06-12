@@ -9,7 +9,7 @@ import "tip3/contracts/interfaces/ITokenWallet.sol";
 
 
 
-contract RPS is IAcceptTokensTransferCallback  {
+contract Coin is IAcceptTokensTransferCallback  {
     uint16 static _nonce;
     uint ids = 1;
     uint public state;
@@ -19,7 +19,7 @@ contract RPS is IAcceptTokensTransferCallback  {
     address rootToken;
     address tokenWallet;
     
-    struct RPSGame {
+    struct CoinGame {
         address     wager;
         address     tokenAddress;
         uint        stake;
@@ -28,8 +28,8 @@ contract RPS is IAcceptTokensTransferCallback  {
         uint        result;
     }
 
-    RPSGame[] public games;
-    mapping (address => RPSGame) public currentUserGame;
+    CoinGame[] public games;
+    mapping (address => CoinGame) public currentUserGame;
     
     
     event BetPlaced(address wager, address tokenAddress, uint stake, uint prediction, uint result);
@@ -44,7 +44,7 @@ contract RPS is IAcceptTokensTransferCallback  {
         ITokenRoot(_tokenRoot).deployWallet {
             value: 1 ever,
             flag: 1,
-            callback: RPS.onTokenWallet // this callback will be called by TokenRoot after deploying wallet for tokensale
+            callback: Coin.onTokenWallet // this callback will be called by TokenRoot after deploying wallet for tokensale
         } (
             address(this),
             0.1 ever
@@ -89,7 +89,7 @@ contract RPS is IAcceptTokensTransferCallback  {
         (address _wager, address _tokenAddress, uint128 _stake, uint _prediction) = data.decode(address, address, uint128, uint);
         require(amount == _stake, 101);
         uint res = playGame(_prediction, _wager, _stake);
-        RPSGame game = RPSGame({
+        CoinGame game = CoinGame({
             wager: _wager,
             tokenAddress : _tokenAddress,
             stake : _stake, 
@@ -143,12 +143,12 @@ contract RPS is IAcceptTokensTransferCallback  {
 
 
 
-    function getUserCurrentGame(address _owner) external view returns(RPSGame) {
+    function getUserCurrentGame(address _owner) external view returns(CoinGame) {
         return currentUserGame[_owner];
     }
 
 
-    function getGameByID(uint _id) external view returns(RPSGame  game) {
+    function getGameByID(uint _id) external view returns(CoinGame  game) {
         return games[_id];
     }
 
