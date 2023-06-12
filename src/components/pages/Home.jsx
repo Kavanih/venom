@@ -18,9 +18,7 @@ const Home = () => {
           burdensome process of user registration and Know Your Customer (KYC)
           requirements. We firmly believe in providing a seamless and
           hassle-free gaming environment, allowing you to focus solely on the
-          thrill of placing bets and winning. Gone are the days of submitting
-          personal information, providing identification documents, and waiting
-          for verification processes.
+          thrill of placing bets and winning.
         </div>
       </div>
       <div className="col-span-2">
