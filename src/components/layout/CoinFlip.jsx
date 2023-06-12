@@ -63,7 +63,7 @@ const CoinFlip = () => {
           <img src="/img/tails.png" alt="" className="back_image transform" />
           <img src="/img/heads.png" alt="" className="front_image transform" />
         </div>
-        <div className="text-center">
+        <div className="text-center mt-8">
           {loading ? (
             <Loader />
           ) : (

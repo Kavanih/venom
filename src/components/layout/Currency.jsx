@@ -58,7 +58,7 @@ const Currency = ({ cho1, cho2, side, setSide, ratee, setRate, bal }) => {
       {/* RECENT */}
       <div className="recent hidden lg:block">
         <div className="top p-2 bg-color3">Recent Plays</div>
-        <div className="main_recent h-20 overflow-auto">
+        <div className="main_recent h-32 overflow-auto">
           <div className="text-sm flex justify-between">
             <div>Player</div>
             <div>Wager</div>
