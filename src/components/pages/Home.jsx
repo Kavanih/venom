@@ -1,11 +1,11 @@
 const Home = () => {
   return (
-    <div className="w-4/5 mx-auto bg-color2 text-color1 p-6 rounded-md grid grid-cols-2">
-      <div className="text-2xl text-center col-span-2">
+    <div className="w-full mx-auto bg-color2 text-color1 p-6 rounded-md grid grid-cols-2">
+      <div className="text-2xl text-center col-span-2 mb-4">
         Welcome to Viper Casino
       </div>
       <div className="">
-        <div className="ti text-center">Play & EARN FOR FREE</div>
+        <div className="ti">Play & EARN FOR FREE</div>
         <div className="content mb-4 w-4/5 mx-auto">
           At Venom Viper Casino, you have the opportunity to play using $VViper,
           a digital currency that can be claimed from the faucet on the website.
@@ -35,7 +35,7 @@ const Home = () => {
         </div>
       </div>
       <div className="">
-        <div className="ti text-center">Provably Fair Betting</div>
+        <div className="ti">Provably Fair Betting</div>
         <div className="content mb-4 w-4/5 mx-auto">
           At Vviper, we prioritize fairness and transparency in every aspect of
           our betting system. To ensure the integrity of our games, we have
