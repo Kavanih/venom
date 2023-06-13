@@ -1,0 +1,76 @@
+{
+  "ABI version": 2,
+  "version": "2.2",
+  "header": ["pubkey", "time", "expire"],
+  "functions": [
+    {
+      "name": "constructor",
+      "inputs": [
+        { "name": "_tokenRoot", "type": "address" },
+        { "name": "_remainingTO", "type": "address" }
+      ],
+      "outputs": []
+    },
+    {
+      "name": "onAcceptTokensTransfer",
+      "inputs": [
+        { "name": "tokenRoot", "type": "address" },
+        { "name": "amount", "type": "uint128" },
+        { "name": "sender", "type": "address" },
+        { "name": "senderWallet", "type": "address" },
+        { "name": "remainingGasTo", "type": "address" },
+        { "name": "payload", "type": "cell" }
+      ],
+      "outputs": []
+    },
+    {
+      "name": "claim",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "name": "withdraw",
+      "inputs": [{ "name": "amount", "type": "uint128" }],
+      "outputs": []
+    },
+    {
+      "name": "onTokenWallet",
+      "inputs": [{ "name": "value", "type": "address" }],
+      "outputs": []
+    },
+    {
+      "name": "getTokenWallet",
+      "inputs": [],
+      "outputs": [{ "name": "value0", "type": "address" }]
+    },
+    {
+      "name": "state",
+      "inputs": [],
+      "outputs": [{ "name": "state", "type": "uint256" }]
+    },
+    {
+      "name": "owner",
+      "inputs": [],
+      "outputs": [{ "name": "owner", "type": "address" }]
+    },
+    {
+      "name": "claimed",
+      "inputs": [],
+      "outputs": [{ "name": "claimed", "type": "map(address,bool)" }]
+    }
+  ],
+  "data": [{ "key": 1, "name": "_nonce", "type": "uint16" }],
+  "events": [],
+  "fields": [
+    { "name": "_pubkey", "type": "uint256" },
+    { "name": "_timestamp", "type": "uint64" },
+    { "name": "_constructorFlag", "type": "bool" },
+    { "name": "_nonce", "type": "uint16" },
+    { "name": "state", "type": "uint256" },
+    { "name": "owner", "type": "address" },
+    { "name": "rootToken", "type": "address" },
+    { "name": "tokenWallet", "type": "address" },
+    { "name": "balance", "type": "uint128" },
+    { "name": "claimed", "type": "map(address,bool)" }
+  ]
+}

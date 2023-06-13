@@ -1,0 +1,110 @@
+pragma ever-solidity >= 0.61.2;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+
+import "tip3/contracts/interfaces/IAcceptTokensTransferCallback.sol";
+import "tip3/contracts/interfaces/ITokenRoot.sol";
+import "tip3/contracts/interfaces/ITokenWallet.sol";
+
+
+
+contract Faucet is IAcceptTokensTransferCallback  {
+    uint16 static _nonce;
+    uint public state;
+    
+    address public owner; 
+    
+    address rootToken;
+    address tokenWallet;
+
+    uint128 balance;
+    
+    mapping (address => bool) public claimed;
+    
+
+    constructor(address _tokenRoot, address _remainingTO) public  {
+        tvm.accept();
+        tvm.rawReserve(1 ever, 0);
+        owner = _remainingTO;
+        rootToken = _tokenRoot;
+
+        ITokenRoot(_tokenRoot).deployWallet {
+            value: 1 ever,
+            flag: 1,
+            callback: Faucet.onTokenWallet // this callback will be called by TokenRoot after deploying wallet for tokensale
+        } (
+            address(this),
+            0.1 ever
+        );
+        _remainingTO.transfer({ value: 0, flag: 128, bounce: false });
+    }
+
+     
+     function onAcceptTokensTransfer(
+        address tokenRoot,
+        uint128 amount,
+        address sender,
+        address senderWallet,
+        address remainingGasTo,
+        TvmCell payload
+    ) external override {
+        tvm.rawReserve(1 ever, 0);
+        state = amount;
+        remainingGasTo.transfer({ value: 0, flag: 128, bounce: false });
+
+        // disables warnings
+        tokenRoot;
+        remainingGasTo;
+        amount;
+        sender;
+        senderWallet;
+        payload;
+
+    }
+
+    function claim() external  {
+        tvm.rawReserve(1 ever, 0);
+        require(claimed[msg.sender] != true, 102);
+        claimed[msg.sender] = true;
+        transferToken(200 * 10**18, msg.sender);
+        msg.sender.transfer({ value: 0, flag: 128, bounce: false });
+    }
+
+    
+    function withdraw(uint128 amount ) external {
+        tvm.rawReserve(1 ever, 0);
+        require(msg.sender == owner, 102);
+        transferToken(amount, owner);
+        msg.sender.transfer({ value: 0, flag: 128, bounce: false });
+    }
+
+
+    function onTokenWallet(address value) external {
+        require (msg.sender.value != 0 && msg.sender == rootToken, 101);
+        tvm.rawReserve(1 ever, 0);
+        tokenWallet = value; // store deployed tip3 wallet address
+        
+        owner.transfer({ value: 0, flag: 128, bounce: false }); // sending remaining gas after setups
+    }
+
+    function getTokenWallet() external view returns (address ) {
+        return tokenWallet;
+    }
+
+
+    function transferToken(uint128 amount, address _receiver) internal {
+        TvmCell empty;
+        // here we just operate with deployed in constructor wallet. owner should provide token supply on this wallet before sales!
+        ITokenWallet(tokenWallet).transfer{ value: 1 ever, flag: 1 }(
+            amount,
+            _receiver,
+            0.1 ever, // this parameter allows to deploy wallet for user, if it's not deployed yet. (fee takes from message so will be payed by user)
+            msg.sender,
+            false,
+            empty
+        );
+    }
+
+ 
+}
