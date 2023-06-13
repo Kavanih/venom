@@ -1,36 +1,48 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { FaHandRock, FaHandPaper, FaHandScissors } from "react-icons/fa";
 import Currency from "./Currency";
 import Alert from "./Alert";
 import AlertContext from "../../Context/AlertContext/AlertContext";
 import Loader from "./Loader";
 import Loaders from "./Loader1";
+import { Address } from "everscale-inpage-provider";
+import { DataContext } from "../../Context/DataContext/DataContext";
+import BigNumber from "bignumber.js";
+import {
+  getBalance,
+  tokenRootAddress,
+  getTokenWallet,
+  getRecentGames,
+  parseResult,
+} from "../../utils";
+
+import RPSAbi from "../../contracts/abis/RPS.abi.json";
+
+const RPSAddress = new Address(
+  "0:f067807872df6e12adada5af425b79d86edf276941fe097468185a4ac2816ca7"
+);
 
 const RPS = () => {
+  const { VC, provider, isConnected, addr, setBalance } =
+    useContext(DataContext);
   const [myChoice, setMyChoice] = useState(null);
   const [ourChoice, setOurChoice] = useState(null);
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [recentGames, setRecentGames] = useState([]);
+  const [ratee, setRate] = useState(5);
   const alertCon = useContext(AlertContext);
   const { addAlert } = alertCon;
 
   const choices = ["Rock", "Paper", "Scissors"];
-
-  const chooses = {
-    Rock: {
-      win: "Scissors",
-      lose: "Paper",
-    },
-    Scissors: {
-      win: "Paper",
-      lose: "Rock",
-    },
-    Paper: {
-      win: "Rock",
-      lose: "Scissors",
-    },
-  };
+  useEffect(() => {
+    if (!provider) return;
+    const contract = new provider.Contract(RPSAbi, RPSAddress);
+    getRecentGames(contract).then((res) => {
+      let parsed = parseResult("rps", res);
+      setRecentGames(parsed);
+    });
+  }, [provider, ourChoice]);
 
   const choo = (choice) => {
     if (choice === "Rock") return <FaHandRock className="choice" />;
@@ -38,42 +50,80 @@ const RPS = () => {
     if (choice === "Scissors") return <FaHandScissors className="choice" />;
   };
 
-  const generateComp = () => {
-    const randChoice = choices[Math.floor(Math.random() * 3)];
-    setOurChoice(randChoice);
-    pickWinner(randChoice);
-  };
-
-  const pickWinner = (rand) => {
-    if (rand === chooses[myChoice].win) {
-      setStatus("You won");
-    } else if (rand === chooses[myChoice].lose) {
-      setStatus("You Lost");
-    } else {
-      setStatus("It is a draw");
+  const startPlaying = async () => {
+    if (!VC && !provider) return;
+    if (!isConnected) {
+      addAlert("You haven't connect your wallet");
+      return;
     }
-  };
-
-  const startPlaying = () => {
     if (!myChoice) {
       addAlert("You haven't selected your choice");
       return;
     }
     setLoading(true);
-    setStatus("");
-    let res = setTimeout(() => {
-      generateComp();
+    let wage_amount = new BigNumber(ratee).multipliedBy(10 ** 18).toString();
+    let amount = new BigNumber(1)
+      .plus(new BigNumber(5).multipliedBy(10 ** 9))
+      .toString();
+    const contract = new provider.Contract(RPSAbi, RPSAddress);
+    const data = await contract.methods
+      .encode({
+        _wager: addr,
+        _tokenAddress: tokenRootAddress,
+        _stake: wage_amount,
+        _prediction: myChoice,
+      })
+      .call();
+    const userTokenWallet = await getTokenWallet(provider, addr);
+    let currentGameTime = (
+      await contract.methods.getUserCurrentGame({ _owner: addr }).call()
+    ).value0.blockTimestamp;
+    console.log(currentGameTime);
+    try {
+      await userTokenWallet.methods
+        .transfer({
+          amount: wage_amount,
+          recipient: RPSAddress,
+          deployWalletValue: 2 * 10 ** 9,
+          notify: true,
+          payload: data.value0,
+          remainingGasTo: addr,
+        })
+        .send({ from: addr, amount });
+
+      let newGame = await contract.methods
+        .getUserCurrentGame({ _owner: addr })
+        .call();
+      if (newGame.value0.blockTimestamp !== currentGameTime) {
+        let gameData = newGame.value0;
+        setOurChoice(gameData.opponentChoice);
+        if (gameData.result === "win") {
+          addAlert("You Won");
+        } else if (gameData.result === "tie") {
+          addAlert("It's a tie!");
+        } else {
+          addAlert("You Lost");
+        }
+        console.log(gameData);
+      } else {
+        addAlert("Game not placed");
+      }
       setLoading(false);
-    }, 5000);
-    console.log("res");
-    console.log(res);
+    } catch (e) {
+      setLoading(false);
+      return;
+    }
+    let newbal = await getBalance(VC, provider, addr);
+    setBalance(newbal);
+
+    setStatus("");
   };
 
   return (
     <div className="biggie">
       <Alert />
       {/* LEFT */}
-      <Currency />
+      <Currency recentGames={recentGames} ratee={ratee} setRate={setRate} />
       {/* RIGHT */}
       <div className="right flex flex-col justify-between px-6">
         {/* CHOICE */}

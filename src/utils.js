@@ -84,5 +84,14 @@ export const parseResult = (gameType, recents) => {
       };
     });
     return parseSed;
+  } else if (gameType === "rps") {
+    let parseSed = recents.map((recent) => {
+      return {
+        wager: recent.wager._address,
+        stake: parseInt(recent.stake) / 10 ** 18,
+        win: recent.result === "win",
+      };
+    });
+    return parseSed;
   }
 };

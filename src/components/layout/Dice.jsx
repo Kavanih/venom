@@ -4,12 +4,7 @@ import Alert from "./Alert";
 import AlertContext from "../../Context/AlertContext/AlertContext";
 import Loader from "./Loader";
 import { DataContext } from "../../Context/DataContext/DataContext";
-import {
-  getBalance,
-  tokenRootAddress,
-  getTokenWallet,
-  parseResult,
-} from "../../utils";
+import { tokenRootAddress, getTokenWallet, parseResult } from "../../utils";
 import { getRecentGames } from "../../utils";
 import DiceAbi from "../../contracts/abis/Dice.abi.json";
 import BigNumber from "bignumber.js";
