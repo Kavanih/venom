@@ -45,7 +45,7 @@ const Home = () => {
       </div>
       <div className="">
         <div className="ti">
-          <GiCardBurn /> Provably Fair Betting
+          <GiCardBurn /> Fair Betting
         </div>
         <div className="content mb-4">
           At Vviper, we prioritize fairness and transparency in every aspect of
