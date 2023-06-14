@@ -64,13 +64,13 @@ const Currency = ({
       <div className="recent hidden lg:block">
         <div className="top p-2 bg-color3">Recent Plays</div>
         <div className="main_recent h-32 overflow-auto">
-          <div className="text-sm flex justify-between">
+          <div className="text-sm grid grid-cols-3 text-center">
             <div>Player</div>
             <div>Wager</div>
             <div>Profit</div>
           </div>
           {recentGames.map((play) => (
-            <div className="text-sm flex justify-between">
+            <div className="text-sm grid grid-cols-3 text-center">
               <div className="player">
                 {play.wager.slice(0, 4)}...
                 {play.wager.slice(-4, -1)}

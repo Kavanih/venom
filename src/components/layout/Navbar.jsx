@@ -34,7 +34,7 @@ const Navbar = () => {
 
         {/* CLAIM BUTTON  */}
         <button onClick={() => claimFaucet(provider, addr, addAlert)}>
-          <Link to={"/"}>Claim 100 $Vviper</Link>
+          <Link to={"/"}>Claim $Vviper</Link>
         </button>
 
         <ConnectButton />
